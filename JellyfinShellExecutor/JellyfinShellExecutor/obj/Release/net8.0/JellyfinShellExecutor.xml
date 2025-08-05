@@ -82,6 +82,11 @@
         <member name="M:JellyfinShellExecutor.Plugin.GetPages">
             <inheritdoc />
         </member>
+        <member name="M:JellyfinShellExecutor.Plugin.UpdateConfiguration(MediaBrowser.Model.Plugins.BasePluginConfiguration)">
+            <summary>
+            Called when configuration is updated.
+            </summary>
+        </member>
         <member name="M:JellyfinShellExecutor.Plugin.SaveScript(System.String)">
             <summary>
             Saves the script content to disk.

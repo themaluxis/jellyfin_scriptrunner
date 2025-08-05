@@ -34,44 +34,89 @@
                 pluginUniqueId: 'eb5d7894-8eef-4b36-aa7f-5d124e828ce1'
             };
 
-            document.getElementById('shellExecutorConfigPage').addEventListener('pageshow', function() {
+            $('#shellExecutorConfigPage').on('pageshow', function() {
                 Dashboard.showLoadingMsg();
+                
                 ApiClient.getPluginConfiguration(ShellExecutorConfig.pluginUniqueId).then(function(config) {
-                    document.getElementById('scriptContent').value = config.ScriptContent || '';
+                    console.log('Loaded configuration:', config);
+                    
+                    // Set the script content
+                    var scriptContent = config.ScriptContent || '';
+                    $('#scriptContent').val(scriptContent);
+                    
+                    console.log('Script content length:', scriptContent.length);
+                    
                     Dashboard.hideLoadingMsg();
+                }).catch(function(error) {
+                    console.error('Failed to load configuration:', error);
+                    Dashboard.hideLoadingMsg();
+                    Dashboard.alert('Failed to load configuration: ' + error);
                 });
             });
 
-            document.getElementById('shellExecutorConfigForm').addEventListener('submit', function(e) {
+            $('#shellExecutorConfigForm').on('submit', function(e) {
                 e.preventDefault();
                 Dashboard.showLoadingMsg();
+                
+                var scriptContent = $('#scriptContent').val();
+                console.log('Saving script content, length:', scriptContent.length);
+                
                 ApiClient.getPluginConfiguration(ShellExecutorConfig.pluginUniqueId).then(function(config) {
-                    config.ScriptContent = document.getElementById('scriptContent').value;
-                    ApiClient.updatePluginConfiguration(ShellExecutorConfig.pluginUniqueId, config).then(function() {
+                    config.ScriptContent = scriptContent;
+                    
+                    ApiClient.updatePluginConfiguration(ShellExecutorConfig.pluginUniqueId, config).then(function(result) {
+                        console.log('Configuration saved:', result);
                         Dashboard.processPluginConfigurationUpdateResult();
+                    }).catch(function(error) {
+                        console.error('Failed to save configuration:', error);
+                        Dashboard.hideLoadingMsg();
+                        Dashboard.alert('Failed to save configuration: ' + error);
                     });
                 });
+                
                 return false;
             });
 
-            document.getElementById('executeNow').addEventListener('click', function() {
+            $('#executeNow').on('click', function() {
                 Dashboard.showLoadingMsg();
                 
                 // First save the current script content
+                var scriptContent = $('#scriptContent').val();
+                console.log('Executing script, content length:', scriptContent.length);
+                
                 ApiClient.getPluginConfiguration(ShellExecutorConfig.pluginUniqueId).then(function(config) {
-                    config.ScriptContent = document.getElementById('scriptContent').value;
+                    config.ScriptContent = scriptContent;
+                    
                     ApiClient.updatePluginConfiguration(ShellExecutorConfig.pluginUniqueId, config).then(function() {
+                        console.log('Configuration saved, now executing...');
+                        
                         // Then execute the script
                         var url = ApiClient.getUrl('plugins/shellexecutor/Execute');
+                        
                         ApiClient.ajax({
                             type: 'POST',
-                            url: url
+                            url: url,
+                            headers: {
+                                'X-MediaBrowser-Token': ApiClient.accessToken()
+                            }
                         }).then(function(result) {
+                            console.log('Execution result:', result);
                             Dashboard.hideLoadingMsg();
-                            if (result.Success) {
+                            
+                            if (result && result.Success) {
                                 Dashboard.alert('Script executed successfully. Check the logs for output.');
                             } else {
-                                Dashboard.alert('Script execution failed: ' + result.Message);
+                                Dashboard.alert('Script execution failed: ' + (result ? result.Message : 'Unknown error'));
                             }
                         }).catch(function(error) {
+                            console.error('Execution error:', error);
                             Dashboard.hideLoadingMsg();
+                            Dashboard.alert('Failed to execute script: ' + error);
+                        });
+                    });
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

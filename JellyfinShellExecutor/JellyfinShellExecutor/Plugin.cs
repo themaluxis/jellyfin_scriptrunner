@@ -42,6 +42,10 @@ namespace JellyfinShellExecutor
             _scriptPath = Path.Combine(applicationPaths.PluginConfigurationsPath, "JellyfinShellExecutor", "script.sh");
             Instance = this;
             
+            // Log the script path for debugging
+            _logger.LogInformation("Script path: {Path}", _scriptPath);
+            LogToFile($"Script path configured as: {_scriptPath}");
+            
             // Ensure plugin directory exists
             var pluginDir = Path.GetDirectoryName(_scriptPath);
             if (!string.IsNullOrEmpty(pluginDir))
@@ -52,12 +56,24 @@ namespace JellyfinShellExecutor
             // Initialize script file if it doesn't exist
             if (!File.Exists(_scriptPath))
             {
+                _logger.LogInformation("Script file doesn't exist, creating with default content");
                 SaveScript(Configuration.ScriptContent);
             }
             else
             {
                 // Load existing script content into configuration
-                Configuration.ScriptContent = File.ReadAllText(_scriptPath);
+                _logger.LogInformation("Loading existing script from {Path}", _scriptPath);
+                try
+                {
+                    var content = File.ReadAllText(_scriptPath);
+                    Configuration.ScriptContent = content;
+                    SaveConfiguration();
+                    _logger.LogInformation("Loaded script content: {Length} characters", content.Length);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to load script content");
+                }
             }
             
             // Execute the script on initialization
@@ -83,6 +99,20 @@ namespace JellyfinShellExecutor
         }
 
         /// <summary>
+        /// Called when configuration is updated.
+        /// </summary>
+        public override void UpdateConfiguration(BasePluginConfiguration configuration)
+        {
+            base.UpdateConfiguration(configuration);
+            
+            if (configuration is PluginConfiguration config)
+            {
+                _logger.LogInformation("Configuration updated, saving script");
+                SaveScript(config.ScriptContent);
+            }
+        }
+
+        /// <summary>
         /// Saves the script content to disk.
         /// </summary>
         /// <param name="content">The script content.</param>
@@ -90,9 +120,15 @@ namespace JellyfinShellExecutor
         {
             try
             {
-                // Save to configuration
-                Configuration.ScriptContent = content;
-                SaveConfiguration();
+                _logger.LogInformation("Saving script to {Path}", _scriptPath);
+                LogToFile($"Saving script to: {_scriptPath}");
+                
+                // Ensure directory exists
+                var dir = Path.GetDirectoryName(_scriptPath);
+                if (!string.IsNullOrEmpty(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
                 
                 // Save to file
                 File.WriteAllText(_scriptPath, content);
@@ -113,11 +149,13 @@ namespace JellyfinShellExecutor
                     process?.WaitForExit();
                 }
                 
-                _logger.LogInformation("Script saved to {Path}", _scriptPath);
+                _logger.LogInformation("Script saved successfully");
+                LogToFile("Script saved successfully");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to save script");
+                LogToFile($"ERROR saving script: {ex.Message}");
                 throw;
             }
         }
@@ -148,8 +186,9 @@ namespace JellyfinShellExecutor
             try
             {
                 // First ensure the script file exists and is up to date
-                if (!File.Exists(_scriptPath) || File.ReadAllText(_scriptPath) != Configuration.ScriptContent)
+                if (!File.Exists(_scriptPath))
                 {
+                    _logger.LogInformation("Script file doesn't exist, creating it");
                     SaveScript(Configuration.ScriptContent);
                 }
 
