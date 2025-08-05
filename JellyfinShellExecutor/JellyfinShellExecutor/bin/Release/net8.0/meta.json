@@ -1,0 +1,18 @@
+{
+    "guid": "eb5d7894-8eef-4b36-aa7f-5d124e828ce1",
+    "name": "Shell Executor",
+    "description": "Execute shell scripts on plugin initialization",
+    "overview": "This plugin allows you to execute shell scripts when Jellyfin starts. You can edit the script content through the plugin configuration interface.",
+    "owner": "itsMalu",
+    "category": "General",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "Initial release",
+        "targetAbi": "10.9.0.0",
+        "sourceUrl": "",
+        "checksum": "",
+        "timestamp": "2025-08-05T00:00:00Z"
+      }
+    ]
+  }

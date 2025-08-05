@@ -1,0 +1,14 @@
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/JellyfinShellExecutor.csproj.AssemblyReference.cache
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/JellyfinShellExecutor.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/JellyfinShellExecutor.csproj.CoreCompileInputs.cache
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/JellyfinShellExecutor.sourcelink.json
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/JellyfinShellExecutor.xml
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/bin/Release/net9.0/JellyfinShellExecutor.deps.json
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/bin/Release/net9.0/JellyfinShellExecutor.dll
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/bin/Release/net9.0/JellyfinShellExecutor.pdb
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/bin/Release/net9.0/JellyfinShellExecutor.xml
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/JellyfinShellExecutor.dll
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/refint/JellyfinShellExecutor.dll
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/JellyfinShellExecutor.pdb
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/obj/Release/net9.0/ref/JellyfinShellExecutor.dll
+/Users/mcaboche/Documents/perso/jellyfin_scriptrunner/JellyfinShellExecutor/JellyfinShellExecutor/bin/Release/net9.0/meta.json

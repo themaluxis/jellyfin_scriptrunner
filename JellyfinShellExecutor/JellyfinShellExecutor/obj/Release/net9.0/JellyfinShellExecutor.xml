@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JellyfinShellExecutor</name>
+    </assembly>
+    <members>
+        <member name="T:JellyfinShellExecutor.Configuration.PluginConfiguration">
+            <summary>
+            Plugin configuration class.
+            </summary>
+        </member>
+        <member name="M:JellyfinShellExecutor.Configuration.PluginConfiguration.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:JellyfinShellExecutor.Configuration.PluginConfiguration"/> class.
+            </summary>
+        </member>
+        <member name="P:JellyfinShellExecutor.Configuration.PluginConfiguration.ScriptContent">
+            <summary>
+            Gets or sets the script content.
+            </summary>
+        </member>
+        <member name="T:JellyfinShellExecutor.Plugin">
+            <summary>
+            The main plugin class for Shell Executor.
+            </summary>
+        </member>
+        <member name="P:JellyfinShellExecutor.Plugin.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:JellyfinShellExecutor.Plugin.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:JellyfinShellExecutor.Plugin.Description">
+            <inheritdoc />
+        </member>
+        <member name="M:JellyfinShellExecutor.Plugin.#ctor(MediaBrowser.Common.Configuration.IApplicationPaths,MediaBrowser.Model.Serialization.IXmlSerializer,Microsoft.Extensions.Logging.ILogger{JellyfinShellExecutor.Plugin})">
+            <summary>
+            Initializes a new instance of the <see cref="T:JellyfinShellExecutor.Plugin"/> class.
+            </summary>
+            <param name="applicationPaths">The application paths.</param>
+            <param name="xmlSerializer">The XML serializer.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="P:JellyfinShellExecutor.Plugin.Instance">
+            <summary>
+            Gets the current plugin instance.
+            </summary>
+        </member>
+        <member name="M:JellyfinShellExecutor.Plugin.GetPages">
+            <inheritdoc />
+        </member>
+        <member name="M:JellyfinShellExecutor.Plugin.SaveScript(System.String)">
+            <summary>
+            Saves the script content to disk.
+            </summary>
+            <param name="content">The script content.</param>
+        </member>
+        <member name="M:JellyfinShellExecutor.Plugin.ExecuteScript">
+            <summary>
+            Executes the shell script.
+            </summary>
+        </member>
+    </members>
+</doc>
