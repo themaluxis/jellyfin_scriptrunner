@@ -39,18 +39,26 @@ namespace JellyfinShellExecutor.Api
         /// </summary>
         /// <returns>Execution result.</returns>
         [HttpPost("Execute")]
-        public ActionResult<ExecutionResult> ExecuteScript()
+        public IActionResult ExecuteScript()
         {
             try
             {
                 _logger.LogInformation("Executing script via API");
                 _plugin.ExecuteScript();
-                return Ok(new ExecutionResult { Success = true, Message = "Script executed successfully" });
+                return new JsonResult(new ExecutionResult
+                {
+                    Success = true,
+                    Message = "Script executed successfully"
+                });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to execute script via API");
-                return Ok(new ExecutionResult { Success = false, Message = ex.Message });
+                return new JsonResult(new ExecutionResult
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
             }
         }
     }
