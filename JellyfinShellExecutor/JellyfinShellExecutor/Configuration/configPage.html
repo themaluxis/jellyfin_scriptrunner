@@ -56,16 +56,22 @@
 
             document.getElementById('executeNow').addEventListener('click', function() {
                 Dashboard.showLoadingMsg();
+                
+                // First save the current script content
                 ApiClient.getPluginConfiguration(ShellExecutorConfig.pluginUniqueId).then(function(config) {
                     config.ScriptContent = document.getElementById('scriptContent').value;
                     ApiClient.updatePluginConfiguration(ShellExecutorConfig.pluginUniqueId, config).then(function() {
-                        // Note: You would need to add an API endpoint to trigger execution
-                        Dashboard.alert('Script saved. It will execute on next plugin initialization.');
-                        Dashboard.hideLoadingMsg();
-                    });
-                });
-            });
-        </script>
-    </div>
-</body>
-</html>
+                        // Then execute the script
+                        var url = ApiClient.getUrl('plugins/shellexecutor/Execute');
+                        ApiClient.ajax({
+                            type: 'POST',
+                            url: url
+                        }).then(function(result) {
+                            Dashboard.hideLoadingMsg();
+                            if (result.Success) {
+                                Dashboard.alert('Script executed successfully. Check the logs for output.');
+                            } else {
+                                Dashboard.alert('Script execution failed: ' + result.Message);
+                            }
+                        }).catch(function(error) {
+                            Dashboard.hideLoadingMsg();

@@ -4,6 +4,39 @@
         <name>JellyfinShellExecutor</name>
     </assembly>
     <members>
+        <member name="T:JellyfinShellExecutor.Api.ShellExecutorController">
+            <summary>
+            Shell Executor API Controller.
+            </summary>
+        </member>
+        <member name="M:JellyfinShellExecutor.Api.ShellExecutorController.#ctor(MediaBrowser.Controller.Configuration.IServerConfigurationManager,Microsoft.Extensions.Logging.ILogger{JellyfinShellExecutor.Api.ShellExecutorController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:JellyfinShellExecutor.Api.ShellExecutorController"/> class.
+            </summary>
+            <param name="config">Instance of the <see cref="T:MediaBrowser.Controller.Configuration.IServerConfigurationManager"/> interface.</param>
+            <param name="logger">Instance of the <see cref="T:Microsoft.Extensions.Logging.ILogger`1"/> interface.</param>
+        </member>
+        <member name="M:JellyfinShellExecutor.Api.ShellExecutorController.ExecuteScript">
+            <summary>
+            Execute the shell script immediately.
+            </summary>
+            <returns>Execution result.</returns>
+        </member>
+        <member name="T:JellyfinShellExecutor.Api.ExecutionResult">
+            <summary>
+            Execution result model.
+            </summary>
+        </member>
+        <member name="P:JellyfinShellExecutor.Api.ExecutionResult.Success">
+            <summary>
+            Gets or sets a value indicating whether the execution was successful.
+            </summary>
+        </member>
+        <member name="P:JellyfinShellExecutor.Api.ExecutionResult.Message">
+            <summary>
+            Gets or sets the execution message.
+            </summary>
+        </member>
         <member name="T:JellyfinShellExecutor.Configuration.PluginConfiguration">
             <summary>
             Plugin configuration class.
@@ -54,6 +87,12 @@
             Saves the script content to disk.
             </summary>
             <param name="content">The script content.</param>
+        </member>
+        <member name="M:JellyfinShellExecutor.Plugin.LogToFile(System.String)">
+            <summary>
+            Logs a message to the executor log file.
+            </summary>
+            <param name="message">The message to log.</param>
         </member>
         <member name="M:JellyfinShellExecutor.Plugin.ExecuteScript">
             <summary>

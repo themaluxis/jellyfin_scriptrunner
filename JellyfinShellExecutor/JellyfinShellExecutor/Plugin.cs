@@ -18,6 +18,7 @@ namespace JellyfinShellExecutor
     {
         private readonly ILogger<Plugin> _logger;
         private readonly string _scriptPath;
+        private readonly string _logPath = "/tmp/executor.log";
 
         /// <inheritdoc />
         public override string Name => "Shell Executor";
@@ -89,6 +90,11 @@ namespace JellyfinShellExecutor
         {
             try
             {
+                // Save to configuration
+                Configuration.ScriptContent = content;
+                SaveConfiguration();
+                
+                // Save to file
                 File.WriteAllText(_scriptPath, content);
                 
                 // Make the script executable on Unix-like systems
@@ -117,17 +123,46 @@ namespace JellyfinShellExecutor
         }
 
         /// <summary>
+        /// Logs a message to the executor log file.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        private void LogToFile(string message)
+        {
+            try
+            {
+                var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                var logEntry = $"[{timestamp}] {message}{Environment.NewLine}";
+                File.AppendAllText(_logPath, logEntry);
+            }
+            catch
+            {
+                // Silently fail if we can't write to the log file
+            }
+        }
+
+        /// <summary>
         /// Executes the shell script.
         /// </summary>
         public void ExecuteScript()
         {
             try
             {
+                // First ensure the script file exists and is up to date
+                if (!File.Exists(_scriptPath) || File.ReadAllText(_scriptPath) != Configuration.ScriptContent)
+                {
+                    SaveScript(Configuration.ScriptContent);
+                }
+
                 if (!File.Exists(_scriptPath))
                 {
-                    _logger.LogWarning("Script file not found at {Path}", _scriptPath);
+                    var message = $"Script file not found at {_scriptPath}";
+                    _logger.LogWarning(message);
+                    LogToFile($"WARNING: {message}");
                     return;
                 }
+
+                _logger.LogInformation("Executing script at {Path}", _scriptPath);
+                LogToFile($"=== EXECUTING SCRIPT: {_scriptPath} ===");
 
                 var startInfo = new ProcessStartInfo
                 {
@@ -136,7 +171,8 @@ namespace JellyfinShellExecutor
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
+                    WorkingDirectory = Path.GetDirectoryName(_scriptPath)
                 };
 
                 using var process = Process.Start(startInfo);
@@ -148,24 +184,45 @@ namespace JellyfinShellExecutor
 
                     if (!string.IsNullOrEmpty(output))
                     {
-                        _logger.LogInformation("Script output: {Output}", output);
+                        _logger.LogInformation("Script output: {Output}", output.Trim());
+                        LogToFile($"STDOUT: {output.Trim()}");
                     }
 
                     if (!string.IsNullOrEmpty(error))
                     {
-                        _logger.LogError("Script error: {Error}", error);
+                        _logger.LogError("Script error: {Error}", error.Trim());
+                        LogToFile($"STDERR: {error.Trim()}");
                     }
 
                     _logger.LogInformation("Script executed with exit code: {ExitCode}", process.ExitCode);
+                    LogToFile($"EXIT CODE: {process.ExitCode}");
+                    LogToFile("=== SCRIPT EXECUTION COMPLETED ===");
+                }
+                else
+                {
+                    var message = "Failed to start process";
+                    _logger.LogError(message);
+                    LogToFile($"ERROR: {message}");
                 }
             }
             catch (IOException ex)
             {
                 _logger.LogError(ex, "IO error while executing script");
+                LogToFile($"ERROR (IOException): {ex.Message}");
             }
             catch (UnauthorizedAccessException ex)
             {
                 _logger.LogError(ex, "Unauthorized access while executing script");
+                LogToFile($"ERROR (UnauthorizedAccessException): {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while executing script");
+                LogToFile($"ERROR (Exception): {ex.Message}");
+            }
+            finally
+            {
+                LogToFile("");  // Add empty line for readability
             }
         }
     }
